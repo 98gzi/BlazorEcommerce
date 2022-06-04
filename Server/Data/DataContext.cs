@@ -6,7 +6,7 @@
         {
 
         }
-        protected override void OnModelCudreating(ModelBuilder modelBuilder)
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Product>().HasData(
             new Product
