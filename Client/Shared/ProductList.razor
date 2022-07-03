@@ -5,7 +5,7 @@
 	var products = ProductService.Products;
 	if(products == null || products.Count == 0)
 	{
-		<span>No Products found...</span>
+		<span>@ProductService.Message</span>
 	}
 }
 

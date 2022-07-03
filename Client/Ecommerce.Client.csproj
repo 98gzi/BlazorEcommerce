@@ -15,4 +15,12 @@
     <ProjectReference Include="..\Shared\Ecommerce.Shared.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <UpToDateCheckInput Remove="Shared\Search.razor" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <_ContentIncludedByDefault Remove="Shared\Search.razor" />
+  </ItemGroup>
+
 </Project>
