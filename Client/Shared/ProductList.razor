@@ -1,10 +1,11 @@
-﻿@inject IProductService ProductService;
+﻿@inject IProductService ProductService
+@implements IDisposable 
 
 @{
 	var products = ProductService.Products;
 	if(products == null || products.Count == 0)
 	{
-		<span>Loading Products...</span>
+		<span>No Products found...</span>
 	}
 }
 
@@ -13,24 +14,44 @@
 	{
 		<li class="media my-3">
 			<div class="media-img-wrapper mr-2">
-				<a href="#">
+				<a href="/products/@product.Id">
 					<img class="media-img" src="@product.ImageUrl" alt="@product.Title" />
 				</a>
 			</div>
 			<div class="media-body">
-				<a href="#">
+				<a href="/products/@product.Id">
 					<h4 class="mb-0">@product.Title</h4>
 				</a>
 				<p>@product.Description</p>
-				<h5 class="price">£@product.Price</h5>
+				@GetPriceText(product)
 			</div>
 		</li>
 	}
 </ul>
 
 @code {
-	protected override async Task OnInitializedAsync()
+	protected override void OnInitialized()
 	{
-		await ProductService.GetProducts();
+		ProductService.ProductsChanges += StateHasChanged;
+	}
+
+	public void Dispose()
+	{
+		ProductService.ProductsChanges -= StateHasChanged;
+	}
+
+	private string GetPriceText(Product product){
+		var variants = product.Variants;
+		if(variants.Count == 0)
+		{
+			return string.Empty;
+		}
+		else if(variants.Count == 1)
+		{
+			return $"{variants[0].Price}";
+		}
+
+		decimal minPrice = variants.Min(v => v.Price);
+		return $"Starting at ${minPrice}";
 	}
 }

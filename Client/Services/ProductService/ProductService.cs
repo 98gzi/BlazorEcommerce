@@ -11,14 +11,27 @@ namespace Ecommerce.Client.Services.ProductService
             HttpClient = httpClient;
         }
         public List<Product> Products { get; set; } = new();
-    
 
-        public async Task GetProducts()
+        public event Action ProductsChanges;
+
+        public async Task<ServiceResponse<Product>> GetProduct(int productId)
         {
-            var productsResult = await HttpClient.GetFromJsonAsync<ServiceResponse<List<Product>>>("api/product");
+            var productsResult = await HttpClient.GetFromJsonAsync<ServiceResponse<Product>>($"api/product/{productId}");
 
-            if (productsResult != null && productsResult.Data != null)
-                Products = productsResult.Data;
+            return productsResult;
+        }
+
+        public async Task GetProducts(string? categoryUrl)
+        {
+            var result = categoryUrl == null ? 
+                await HttpClient.GetFromJsonAsync<ServiceResponse<List<Product>>>("api/product") :
+                await HttpClient.GetFromJsonAsync<ServiceResponse<List<Product>>>($"api/product/category/{categoryUrl}");
+
+
+            if (result != null && result.Data != null)
+                Products = result.Data;
+
+            ProductsChanges.Invoke();
         }
     }
 }

@@ -3,6 +3,7 @@ using Ecommerce.Server.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Ecommerce.Server.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20220614193855_Categories")]
+    partial class Categories
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -81,6 +83,9 @@ namespace Ecommerce.Server.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<decimal>("Price")
+                        .HasColumnType("decimal(18,2)");
+
                     b.Property<string>("Title")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -98,6 +103,7 @@ namespace Ecommerce.Server.Migrations
                             CategoryId = 1,
                             Description = "Swann's Way, the first part of A la recherche de temps perdu, Marcel Proust's seven-part cycle, was published in 1913. In it, Proust introduces the themes that run through the entire work.",
                             ImageUrl = "https://d3i5mgdwi2ze58.cloudfront.net/7hqv6ddaqv363p4hadx6lymotow1",
+                            Price = 9.99m,
                             Title = "In Search of Lost Time by Marcel Proust"
                         },
                         new
@@ -106,6 +112,7 @@ namespace Ecommerce.Server.Migrations
                             CategoryId = 1,
                             Description = "Alonso Quixano, a retired country gentleman in his fifties, lives in an unnamed section of La Mancha with his niece and a housekeeper.",
                             ImageUrl = "https://d3i5mgdwi2ze58.cloudfront.net/821hrmad01r9sdml2g2mmnbyykfk",
+                            Price = 7.99m,
                             Title = "Don Quixote by Miguel de Cervantes"
                         },
                         new
@@ -114,78 +121,8 @@ namespace Ecommerce.Server.Migrations
                             CategoryId = 1,
                             Description = "One of the 20th century's enduring works, One Hundred Years of Solitude is a widely beloved and acclaimed novel known throughout the world, and the ultimate achievement in a Nobel Prize–winning car.",
                             ImageUrl = "https://d3i5mgdwi2ze58.cloudfront.net/j7koelfcv0va5zky4x1ccmpsgcsb",
+                            Price = 8.99m,
                             Title = "One Hundred Years of Solitude by Gabriel Garcia Marquez"
-                        });
-                });
-
-            modelBuilder.Entity("Ecommerce.Shared.ProductType", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("ProductTypes");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            Name = "Default"
-                        },
-                        new
-                        {
-                            Id = 2,
-                            Name = "Paperback"
-                        },
-                        new
-                        {
-                            Id = 3,
-                            Name = "E-Book"
-                        });
-                });
-
-            modelBuilder.Entity("Ecommerce.Shared.ProductVariant", b =>
-                {
-                    b.Property<int>("ProductId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("ProductTypeId")
-                        .HasColumnType("int");
-
-                    b.Property<decimal>("OriginalPrice")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<decimal>("Price")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.HasKey("ProductId", "ProductTypeId");
-
-                    b.HasIndex("ProductTypeId");
-
-                    b.ToTable("ProductVariants");
-
-                    b.HasData(
-                        new
-                        {
-                            ProductId = 1,
-                            ProductTypeId = 1,
-                            OriginalPrice = 19.99m,
-                            Price = 9.99m
-                        },
-                        new
-                        {
-                            ProductId = 1,
-                            ProductTypeId = 2,
-                            OriginalPrice = 14.99m,
-                            Price = 8.99m
                         });
                 });
 
@@ -198,30 +135,6 @@ namespace Ecommerce.Server.Migrations
                         .IsRequired();
 
                     b.Navigation("Category");
-                });
-
-            modelBuilder.Entity("Ecommerce.Shared.ProductVariant", b =>
-                {
-                    b.HasOne("Ecommerce.Shared.Product", "Product")
-                        .WithMany("Variants")
-                        .HasForeignKey("ProductId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Ecommerce.Shared.ProductType", "ProductType")
-                        .WithMany()
-                        .HasForeignKey("ProductTypeId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Product");
-
-                    b.Navigation("ProductType");
-                });
-
-            modelBuilder.Entity("Ecommerce.Shared.Product", b =>
-                {
-                    b.Navigation("Variants");
                 });
 #pragma warning restore 612, 618
         }
